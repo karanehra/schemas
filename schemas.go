@@ -34,9 +34,12 @@ func CreateProcess(DB *mongo.Database, process Process) (*mongo.InsertOneResult,
 }
 
 //GetNewProcess returns an un-intiated process
-func GetNewProcess(DB *mongo.Database) *mongo.SingleResult {
+func GetNewProcess(DB *mongo.Database) Process {
 	coll := DB.Collection("process")
-	return coll.FindOne(context.Background(), bson.M{})
+	process := Process{}
+	document := coll.FindOne(context.Background(), bson.M{"status": "CREATED"})
+	document.Decode(&process)
+	return process
 }
 
 //UpdateProcessStatus changes process status against the process with the provided ID
