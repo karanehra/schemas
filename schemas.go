@@ -3,7 +3,6 @@ package schemas
 import (
 	"context"
 
-	"github.com/karanehra/schemas"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -33,7 +32,7 @@ func GetAllProcesses(DB *mongo.Database) ([]bson.M, error) {
 }
 
 //CreateProcess adds a process to db
-func CreateProcess(DB *mongo.Database, process schemas.Process) (*mongo.InsertOneResult, error) {
+func CreateProcess(DB *mongo.Database, process Process) (*mongo.InsertOneResult, error) {
 	coll := DB.Collection("process")
 	return coll.InsertOne(context.TODO(), process)
 }
