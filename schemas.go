@@ -2,6 +2,7 @@ package schemas
 
 import (
 	"context"
+	"errors"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -12,6 +13,7 @@ import (
 type Process struct {
 	Name   string `json:"processName"`
 	Status string `json:"status"`
+	Type   string `json:"type"`
 }
 
 //GetAllProcesses fetches all processes from the database
@@ -30,6 +32,15 @@ func GetAllProcesses(DB *mongo.Database) ([]bson.M, error) {
 //CreateProcess adds a process to db
 func CreateProcess(DB *mongo.Database, process Process) (*mongo.InsertOneResult, error) {
 	coll := DB.Collection("process")
+	if process.Name == "" {
+		return nil, errors.New("Process name is required")
+	}
+	if process.Status == "" {
+		return nil, errors.New("Process status is required")
+	}
+	if process.Type == "" {
+		return nil, errors.New("Process type is required")
+	}
 	return coll.InsertOne(context.TODO(), process)
 }
 
