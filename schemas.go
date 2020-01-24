@@ -9,6 +9,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+var validProcesses []string = []string{
+	"UPDATE_FEEDS",
+	"CHECK_FOR_FEEDS",
+	"CHECK_FOR_PROCESS",
+	"DUMP_FEEDS",
+}
+
 //Process defines a task to be sent to a processor
 type Process struct {
 	Name   string `json:"processName"`
@@ -41,6 +48,9 @@ func CreateProcess(DB *mongo.Database, process Process) (*mongo.InsertOneResult,
 	if process.Type == "" {
 		return nil, errors.New("Process type is required")
 	}
+	if !isValidProcess(process.Type) {
+		return nil, errors.New("Invalid process type")
+	}
 	return coll.InsertOne(context.TODO(), process)
 }
 
@@ -60,4 +70,21 @@ func UpdateProcessStatus(DB *mongo.Database, status, processID string) (*mongo.U
 	filter := bson.M{"_id": objectID}
 	update := bson.M{"$set": bson.M{"status": status}}
 	return coll.UpdateOne(context.TODO(), filter, update)
+}
+
+//DeleteProcess removes a process from DB
+func DeleteProcess(DB *mongo.Database, processID string) error {
+	coll := DB.Collection("process")
+	objectID, _ := primitive.ObjectIDFromHex(processID)
+	_, err := coll.DeleteOne(context.TODO(), bson.M{"_id": objectID})
+	return err
+}
+
+func isValidProcess(process string) bool {
+	for i := range validProcesses {
+		if process == validProcesses[i] {
+			return true
+		}
+	}
+	return false
 }
