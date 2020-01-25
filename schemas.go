@@ -3,6 +3,7 @@ package schemas
 import (
 	"context"
 	"errors"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -18,9 +19,11 @@ var validProcesses []string = []string{
 
 //Process defines a task to be sent to a processor
 type Process struct {
-	Name   string `json:"processName"`
-	Status string `json:"status"`
-	Type   string `json:"type"`
+	Name      string `json:"processName"`
+	Status    string `json:"status"`
+	Type      string `json:"type"`
+	CreatedAt int64
+	UpdatedAt int64
 }
 
 //GetAllProcesses fetches all processes from the database
@@ -51,6 +54,8 @@ func CreateProcess(DB *mongo.Database, process Process) (*mongo.InsertOneResult,
 	if !isValidProcess(process.Type) {
 		return nil, errors.New("Invalid process type")
 	}
+	process.CreatedAt = time.Now().UnixNano() / int64(time.Millisecond)
+	process.UpdatedAt = time.Now().UnixNano() / int64(time.Millisecond)
 	return coll.InsertOne(context.TODO(), process)
 }
 
