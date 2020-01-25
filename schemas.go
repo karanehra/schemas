@@ -19,9 +19,10 @@ var validProcesses []string = []string{
 
 //Process defines a task to be sent to a processor
 type Process struct {
-	Name      string `json:"processName"`
-	Status    string `json:"status"`
-	Type      string `json:"type"`
+	ID        primitive.ObjectID `json:"_id"`
+	Name      string             `json:"processName"`
+	Status    string             `json:"status"`
+	Type      string             `json:"type"`
 	CreatedAt int64
 	UpdatedAt int64
 }
