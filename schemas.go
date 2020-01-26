@@ -19,12 +19,12 @@ var validProcesses []string = []string{
 
 //Process defines a task to be sent to a processor
 type Process struct {
-	ID        primitive.ObjectID `json:"_id"`
-	Name      string             `json:"processName"`
-	Status    string             `json:"status"`
-	Type      string             `json:"type"`
-	CreatedAt int64
-	UpdatedAt int64
+	ID        primitive.ObjectID `json:"_id" bson:"_id"`
+	Name      string             `json:"processName" bson:"processName"`
+	Status    string             `json:"status" bson:"status"`
+	Type      string             `json:"type" bson:"type"`
+	CreatedAt int64              `json:"createdAt" bson:"createdAt"`
+	UpdatedAt int64              `json:"updateAt" bson:"updateAt"`
 }
 
 //GetAllProcesses fetches all processes from the database
