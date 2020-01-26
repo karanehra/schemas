@@ -70,10 +70,9 @@ func GetNewProcess(DB *mongo.Database) Process {
 }
 
 //UpdateProcessStatus changes process status against the process with the provided ID
-func UpdateProcessStatus(DB *mongo.Database, status, processID string) (*mongo.UpdateResult, error) {
+func UpdateProcessStatus(DB *mongo.Database, status, processID primitive.ObjectID) (*mongo.UpdateResult, error) {
 	coll := DB.Collection("process")
-	objectID, _ := primitive.ObjectIDFromHex(processID)
-	filter := bson.M{"_id": objectID}
+	filter := bson.M{"_id": processID}
 	update := bson.M{"$set": bson.M{"status": status}}
 	return coll.UpdateOne(context.TODO(), filter, update)
 }
