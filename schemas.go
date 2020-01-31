@@ -19,6 +19,16 @@ var validProcesses []string = []string{
 
 //Process defines a task to be sent to a processor
 type Process struct {
+	// ID        primitive.ObjectID `json:"_id" bson:"_id"`
+	Name      string `json:"processName" bson:"processName"`
+	Status    string `json:"status" bson:"status"`
+	Type      string `json:"type" bson:"type"`
+	CreatedAt int64  `json:"createdAt" bson:"createdAt"`
+	UpdatedAt int64  `json:"updateAt" bson:"updateAt"`
+}
+
+//ProcessExtractor is used to extract process data into fields
+type ProcessExtractor struct {
 	ID        primitive.ObjectID `json:"_id" bson:"_id"`
 	Name      string             `json:"processName" bson:"processName"`
 	Status    string             `json:"status" bson:"status"`
@@ -61,9 +71,9 @@ func CreateProcess(DB *mongo.Database, process Process) (*mongo.InsertOneResult,
 }
 
 //GetNewProcess returns an un-intiated process
-func GetNewProcess(DB *mongo.Database) Process {
+func GetNewProcess(DB *mongo.Database) ProcessExtractor {
 	coll := DB.Collection("process")
-	process := Process{}
+	process := ProcessExtractor{}
 	document := coll.FindOne(context.Background(), bson.M{"status": "CREATED"})
 	document.Decode(&process)
 	return process
