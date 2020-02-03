@@ -33,6 +33,6 @@ func GetFeeds(DB *mongo.Database, filter primitive.D) ([]bson.M, error) {
 		return nil, err
 	}
 	var results []bson.M
-	err = cur.All(ctx, results)
+	err = cur.All(ctx, &results)
 	return results, err
 }
