@@ -25,7 +25,7 @@ type FeedExtractor struct {
 }
 
 //GetFeeds returns feed docs
-func GetFeeds(DB *mongo.Database, filter primitive.M) ([]bson.M, error) {
+func GetFeeds(DB *mongo.Database, filter primitive.D) ([]bson.M, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	cur, err := DB.Collection("feeds").Find(ctx, filter)
