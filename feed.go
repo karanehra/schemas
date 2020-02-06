@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -25,14 +24,20 @@ type FeedExtractor struct {
 }
 
 //GetFeeds returns feed docs
-func GetFeeds(DB *mongo.Database, filter primitive.D) ([]bson.M, error) {
+func GetFeeds(DB *mongo.Database, filter primitive.D) ([]FeedExtractor, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cur, err := DB.Collection("feeds").Find(ctx, filter)
+	cur, err := DB.Collection("articles").Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
-	var results []bson.M
-	err = cur.All(ctx, &results)
+	var results []FeedExtractor
+	for cur.Next(ctx) {
+		var p FeedExtractor
+		if err := cur.Decode(&p); err != nil {
+			continue
+		}
+		results = append(results, p)
+	}
 	return results, err
 }
