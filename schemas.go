@@ -51,15 +51,13 @@ func CreateProcess(DB *mongo.Database, process Process) (*mongo.InsertOneResult,
 	if process.Name == "" {
 		return nil, errors.New("Process name is required")
 	}
-	if process.Status == "" {
-		return nil, errors.New("Process status is required")
-	}
 	if process.Type == "" {
 		return nil, errors.New("Process type is required")
 	}
 	if !isValidProcess(process.Type) {
 		return nil, errors.New("Invalid process type")
 	}
+	process.Status = "CREATED"
 	process.CreatedAt = time.Now().UnixNano() / int64(time.Millisecond)
 	process.UpdatedAt = time.Now().UnixNano() / int64(time.Millisecond)
 	return coll.InsertOne(context.TODO(), process)
