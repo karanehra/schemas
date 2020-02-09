@@ -9,12 +9,13 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var testDatabase *mongo.Database
-var createdID interface{}
+var createdID primitive.ObjectID
 
 func init() {
 	fmt.Println("Setting Up test")
@@ -65,8 +66,8 @@ func TestCreateProcess(t *testing.T) {
 	if err != nil {
 		t.Error("Process creation should be success")
 	}
-	createdID = data.InsertedID
-	fmt.Println(createdID)
+	createdID, ok := data.InsertedID.(primitive.ObjectID)
+	fmt.Println(createdID, ok)
 }
 
 func TestGetAllProcesses(t *testing.T) {
@@ -77,4 +78,19 @@ func TestGetAllProcesses(t *testing.T) {
 	if len(data) != 1 {
 		t.Error(fmt.Sprintf("Incorrect number of docs. Got %v, Expected %v", 1, len(data)))
 	}
+}
+
+func TestGetNewProcess(t *testing.T) {
+	data := GetNewProcess(testDatabase)
+	if data.Name != "New Process" {
+		t.Error("unexpected process found")
+	}
+}
+
+func TestUpdateProcessStatus(t *testing.T) {
+	res, err := UpdateProcessStatus(testDatabase, "NEW", createdID)
+	if err != nil {
+		t.Error("Error during update in DB layer")
+	}
+	fmt.Println(res)
 }
