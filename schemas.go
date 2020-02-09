@@ -86,10 +86,9 @@ func UpdateProcessStatus(DB *mongo.Database, status string, processID primitive.
 }
 
 //DeleteProcess removes a process from DB
-func DeleteProcess(DB *mongo.Database, processID string) error {
+func DeleteProcess(DB *mongo.Database, processID primitive.ObjectID) error {
 	coll := DB.Collection("process")
-	objectID, _ := primitive.ObjectIDFromHex(processID)
-	_, err := coll.DeleteOne(context.TODO(), bson.M{"_id": objectID})
+	_, err := coll.DeleteOne(context.TODO(), bson.M{"_id": processID})
 	return err
 }
 
