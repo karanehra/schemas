@@ -66,8 +66,11 @@ func TestCreateProcess(t *testing.T) {
 	if err != nil {
 		t.Error("Process creation should be success")
 	}
-	createdID, ok := data.InsertedID.(primitive.ObjectID)
-	fmt.Println(createdID, ok)
+	var ok bool
+	createdID, ok = data.InsertedID.(primitive.ObjectID)
+	if !ok {
+		t.Error("Incorrect record ID")
+	}
 }
 
 func TestGetAllProcesses(t *testing.T) {
@@ -88,9 +91,20 @@ func TestGetNewProcess(t *testing.T) {
 }
 
 func TestUpdateProcessStatus(t *testing.T) {
-	res, err := UpdateProcessStatus(testDatabase, "NEW", createdID)
+	_, err := UpdateProcessStatus(testDatabase, "NEW", createdID)
 	if err != nil {
 		t.Error("Error during update in DB layer")
 	}
-	fmt.Println(res)
+
+	data := ProcessExtractor{}
+
+	newRes := testDatabase.Collection("process").FindOne(context.TODO(), bson.M{"_id": createdID})
+	newRes.Decode(&data)
+	if data.Status != "NEW" {
+		t.Error("Update not reflecting in DB")
+	}
+}
+
+func TestDeleteProcess(t *testing.T) {
+
 }
