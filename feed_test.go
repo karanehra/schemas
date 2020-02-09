@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 	"testing"
 	"time"
 
@@ -13,6 +14,7 @@ import (
 )
 
 var testDatabase *mongo.Database
+var createdID interface{}
 
 func init() {
 	fmt.Println("Setting Up test")
@@ -30,10 +32,11 @@ func init() {
 	testDatabase = mongoClient.Database("schemaTestDB")
 	fmt.Println("Database Connection Success")
 	fmt.Println("Purging database")
-	coll := testDatabase.Collection("feeds")
+	coll := testDatabase.Collection("process")
 	coll.DeleteMany(context, bson.D{})
+	coll = testDatabase.Collection("feeds")
 	coll.DeleteMany(context, bson.D{})
-	fmt.Println("Purging database")
+	fmt.Println("Purged database")
 }
 
 func TestCreateProcess(t *testing.T) {
@@ -47,13 +50,31 @@ func TestCreateProcess(t *testing.T) {
 	testProcess.Name = "New Process"
 	_, err = CreateProcess(testDatabase, testProcess)
 	if err == nil || err.Error() != "Process type is required" {
-		t.Error("Creation should throw error", err)
+		t.Error("Creation should throw error")
 	}
 
 	testProcess.Type = "RANDOM_TASK"
 
 	_, err = CreateProcess(testDatabase, testProcess)
-	if err == nil || err.Error() != "Process type is required" {
-		t.Error("Creation should throw error", err)
+	if err == nil || err.Error() != "Invalid process type" {
+		t.Error("Creation should throw error")
+	}
+
+	testProcess.Type = ValidProcesses[len(ValidProcesses)*rand.Intn(1)]
+	data, err := CreateProcess(testDatabase, testProcess)
+	if err != nil {
+		t.Error("Process creation should be success")
+	}
+	createdID = data.InsertedID
+	fmt.Println(createdID)
+}
+
+func TestGetAllProcesses(t *testing.T) {
+	data, err := GetAllProcesses(testDatabase)
+	if err != nil {
+		t.Error("Error during Find. Check DB call")
+	}
+	if len(data) != 1 {
+		t.Error(fmt.Sprintf("Incorrect number of docs. Got %v, Expected %v", 1, len(data)))
 	}
 }

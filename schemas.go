@@ -10,7 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var validProcesses []string = []string{
+//ValidProcesses defines process values that are connected to job fucntions
+var ValidProcesses []string = []string{
 	"UPDATE_FEEDS",
 	"CHECK_FOR_FEEDS",
 	"CHECK_FOR_PROCESS",
@@ -89,8 +90,8 @@ func DeleteProcess(DB *mongo.Database, processID string) error {
 }
 
 func isValidProcess(process string) bool {
-	for i := range validProcesses {
-		if process == validProcesses[i] {
+	for i := range ValidProcesses {
+		if process == ValidProcesses[i] {
 			return true
 		}
 	}
