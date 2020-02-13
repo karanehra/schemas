@@ -42,7 +42,6 @@ func GetFeeds(DB *mongo.Database, filter primitive.D) ([]FeedExtractor, error) {
 			continue
 		}
 		results = append(results, p)
-		break
 	}
 	return results, err
 }
