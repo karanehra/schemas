@@ -24,8 +24,16 @@ type Article struct {
 
 //ArticleExtractor with bson tags for extracting _id
 type ArticleExtractor struct {
-	Article
-	ID string `json:"_id" bson:"_id"`
+	Title           string `json:"title" bson:"title"`
+	Content         string `json:"content" bson:"content"`
+	Description     string `json:"description" bson:"description"`
+	URL             string `json:"url" bson:"url"`
+	FeedTitle       string `json:"feedTitle" bson:"feedTitle"`
+	FeedDescription string `json:"feedDescription" bson:"feedDescription"`
+	FeedURL         string `json:"feedURL" bson:"feedURL"`
+	CreatedAt       int64  `json:"createdAt" bson:"createdAt"`
+	UpdatedAt       int64  `json:"updatedAt" bson:"updatedAt"`
+	ID              string `json:"_id" bson:"_id"`
 }
 
 //GetArticles returns feed docs
