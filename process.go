@@ -29,12 +29,13 @@ type Process struct {
 
 //ProcessExtractor is used to extract process data into fields
 type ProcessExtractor struct {
-	ID        primitive.ObjectID `json:"_id" bson:"_id"`
-	Name      string             `json:"processName" bson:"processName"`
-	Status    string             `json:"status" bson:"status"`
-	Type      string             `json:"type" bson:"type"`
-	CreatedAt int64              `json:"createdAt" bson:"createdAt"`
-	UpdatedAt int64              `json:"updatedAt" bson:"updatedAt"`
+	ID primitive.ObjectID `json:"_id" bson:"_id"`
+	Process
+	// Name      string             `json:"processName" bson:"processName"`
+	// Status    string             `json:"status" bson:"status"`
+	// Type      string             `json:"type" bson:"type"`
+	// CreatedAt int64              `json:"createdAt" bson:"createdAt"`
+	// UpdatedAt int64              `json:"updatedAt" bson:"updatedAt"`
 }
 
 //GetAllProcesses fetches all processes from the database

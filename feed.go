@@ -19,9 +19,13 @@ type Feed struct {
 
 //FeedExtractor adds an ID to the feed. Use for manipulating feeds
 type FeedExtractor struct {
-	ID primitive.ObjectID `json:"_id" bson:"_id"`
-	Feed
+	ID    primitive.ObjectID `json:"_id" bson:"_id"`
+	URL   string             `json:"url" bson:"url"`
+	Title string             `json:"title" bson:"title"`
+	Tags  []string           `json:"tags" bson:"tags"`
 }
+
+// func CreateFeed(DB *mongo.Database, feed Feed)()
 
 //GetFeeds returns feed docs
 func GetFeeds(DB *mongo.Database, filter primitive.D) ([]FeedExtractor, error) {
@@ -38,6 +42,7 @@ func GetFeeds(DB *mongo.Database, filter primitive.D) ([]FeedExtractor, error) {
 			continue
 		}
 		results = append(results, p)
+		break
 	}
 	return results, err
 }
