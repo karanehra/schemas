@@ -31,7 +31,7 @@ type FeedExtractor struct {
 func GetFeeds(DB *mongo.Database, filter primitive.D) ([]FeedExtractor, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cur, err := DB.Collection("articles").Find(ctx, filter)
+	cur, err := DB.Collection("feeds").Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
