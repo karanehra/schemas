@@ -16,6 +16,7 @@ var ValidProcesses []string = []string{
 	"CHECK_FOR_FEEDS",
 	"CHECK_FOR_PROCESS",
 	"DUMP_FEEDS",
+	"DUMP_ARTICLES",
 }
 
 //Process defines a task to be sent to a processor
